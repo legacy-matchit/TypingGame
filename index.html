@@ -1,0 +1,148 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="GENERATOR" content="UTF-8 Writer" />
+    <title>Typing Game</title>
+
+        <script>
+
+            document.onkeydown = typeGame;  //Call function typeGame () when pressing a key
+                
+
+           
+
+            //characters
+            var moji = new Array("Ａ","Ｂ","Ｃ","Ｄ","Ｅ","Ｆ","Ｇ","Ｈ","Ｉ",
+                                "Ｊ","Ｋ","Ｌ","Ｍ","Ｎ","Ｏ","Ｐ","Ｑ","Ｒ",
+                                "Ｓ","Ｔ","Ｕ","Ｖ","Ｗ","Ｘ","Ｙ","Ｚ");
+
+            //key codes
+            var kcode = new Array(65,66,67,68,69,70,71,72,73,
+                                74,75,76,77,78,79,80,81,82,
+                                83,84,85,86,87,88,89,90);
+
+            //random 0-25
+            var rnd = new Array();
+
+
+
+
+
+            //Global variables
+            var mondai = "";       //mission　letters
+            var cnt=0;             //count
+            var typStart,typEnd;   //start and end typing 
+            var range = 10;        //total letter count
+
+
+
+
+            //0～25 make random numbers
+            function ransu(){
+                for ( var i = 0 ; i < range ; i++ ){
+                    rnd[i] = Math.floor( Math.random() * 26 );
+                }
+            }
+
+
+            //setting
+            function gameSet(){
+                //init
+                mondai="";
+                cnt=0;
+            
+                
+                ransu();
+            
+                //make mission
+                for ( var i = 0 ; i < range ; i++){
+                    mondai =  mondai + moji[ rnd[i] ];
+                }
+            
+                //show mission
+                document.getElementById("frame").innerHTML = mondai;
+            }
+
+
+            //Function that receives key input
+            function typeGame(evt){
+                var kc;  //input key code
+            
+                //get input keycode
+                if (document.all){
+                    kc = event.keyCode;
+                }else{
+                    kc = evt.which;
+                }
+            
+                //compare input keycode and mission
+                if (kc == kcode[ rnd[cnt] ]){
+                    //if it same
+
+                    //Record the time when the first character was entered
+                    if (cnt==0){ 
+                        typStart = new Date();
+                    }
+                
+                    cnt++;
+                
+                    //Check if all characters have been entered
+                    if ( cnt < range){
+                        //Cut off the first letter of the mission
+                        mondai = mondai.substring(1,mondai.Length);
+
+                        //update frame
+                        document.getElementById("frame").innerHTML = mondai;
+                    }else{
+                        //If all characters have been entered, record the end time
+                        typEnd = new Date();
+                
+                        //End time-get millisecond taken by start time
+                        var keika = typEnd - typStart;
+                
+                        //Divide by 1000 to “truncate” to get seconds
+                        var sec = Math.floor( keika/1000 );
+                
+                        //Get millisecond by "remainder (can be obtained in%)" divided by 1000
+                        var msec = keika % 1000;
+                
+                        //Create a string that tells you the problem is over
+                        var fin="finished time："+sec+"."+msec+" Second";
+                
+                        //show game ends
+                        document.getElementById("frame").innerHTML = fin;
+                    }
+                }
+            }
+
+        </script>
+
+    </head>
+    
+    
+    <body onload="gameSet()" bgcolor="#ffffff" text="#000000" link="#0000ff" alink="#ff0000" vlink="#800080">
+        <h1 style="text-align:center;">Typing Game</h1>
+        <h2 style="text-align:center;">Start typing letters</h2>
+
+            <div align="center" id="frame"></div>
+
+            <form style="text-align:center;">
+                <input type="button" value="Restart" onclick="gameSet()"><br>
+            </form>
+    </body>
+</html>
+
+
+<style type="text/css">
+    <!--div#frame{
+      border:8px double navy;
+      width:400px;
+      height:300px;
+      font-size:18pt;
+      margin:auto;
+      text-align:center;
+    }
+    -->
+</style>
